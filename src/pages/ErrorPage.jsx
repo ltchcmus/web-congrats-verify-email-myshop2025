@@ -1,145 +1,175 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { XCircle, AlertTriangle, RefreshCw, HelpCircle } from 'lucide-react'
 
 const ErrorPage = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [showContent, setShowContent] = useState(false);
-  const [shake, setShake] = useState(false);
+  const [render, setRender] = useState(false)
+  const [searchParams] = useSearchParams()
+  
+  const errorType = searchParams.get('type') || 'invalid'
+  
+  // Tailwind cannot see dynamic class names reliably; use explicit class strings per variant
+  const variants = {
+    invalid: {
+      Icon: XCircle,
+      title: 'Liên kết không hợp lệ',
+      description:
+        'Liên kết xác thực bạn sử dụng không đúng hoặc đã bị thay đổi. Vui lòng kiểm tra lại hoặc yêu cầu một liên kết mới.',
+      reasons: ['URL bị sao chép sai', 'Liên kết đã được chỉnh sửa', 'Lỗi hệ thống tạm thời'],
+      accentText: 'text-rose-500',
+      accentBg: 'bg-rose-600',
+      accentBgHover: 'hover:bg-rose-700',
+      accentShadow: 'shadow-rose-500/30',
+      blobFrom: 'bg-rose-200/50',
+      blobTo: 'bg-rose-100/40'
+    },
+    expired: {
+      Icon: AlertTriangle,
+      title: 'Liên kết đã hết hạn',
+      description:
+        'Vì lý do bảo mật, liên kết xác thực chỉ có hiệu lực trong một khoảng thời gian nhất định và đã hết hạn.',
+      reasons: ['Quá 24 giờ kể từ khi nhận email', 'Đã yêu cầu liên kết mới hơn', 'Liên kết đã được sử dụng'],
+      accentText: 'text-amber-500',
+      accentBg: 'bg-amber-600',
+      accentBgHover: 'hover:bg-amber-700',
+      accentShadow: 'shadow-amber-500/30',
+      blobFrom: 'bg-amber-200/50',
+      blobTo: 'bg-amber-100/40'
+    },
+    used: {
+      Icon: XCircle,
+      title: 'Liên kết đã được sử dụng',
+      description:
+        'Email của bạn đã được xác thực trước đó bằng liên kết này. Bạn có thể đăng nhập ngay bây giờ.',
+      reasons: ['Email đã được xác thực thành công', 'Đăng nhập thay vì xác thực lại', 'Nhầm lẫn giữa các tài khoản'],
+      accentText: 'text-emerald-600',
+      accentBg: 'bg-emerald-600',
+      accentBgHover: 'hover:bg-emerald-700',
+      accentShadow: 'shadow-emerald-500/30',
+      blobFrom: 'bg-emerald-200/50',
+      blobTo: 'bg-emerald-100/40'
+    },
+    error: {
+      Icon: AlertTriangle,
+      title: 'Đã có lỗi xảy ra',
+      description: 'Hệ thống của chúng tôi đã gặp phải một sự cố bất ngờ. Vui lòng thử lại sau ít phút.',
+      reasons: ['Lỗi kết nối máy chủ', 'Bảo trì hệ thống', 'Lỗi không xác định'],
+      accentText: 'text-orange-600',
+      accentBg: 'bg-orange-600',
+      accentBgHover: 'hover:bg-orange-700',
+      accentShadow: 'shadow-orange-500/30',
+      blobFrom: 'bg-orange-200/50',
+      blobTo: 'bg-orange-100/40'
+    }
+  }
+
+  const currentError = variants[errorType] || variants.invalid
 
   useEffect(() => {
-    // Hiệu ứng xuất hiện
-    setTimeout(() => setIsVisible(true), 100);
-    setTimeout(() => setShowContent(true), 500);
-    
-    // Hiệu ứng rung lắc
-    const interval = setInterval(() => {
-      setShake(true);
-      setTimeout(() => setShake(false), 500);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
+    setRender(true)
+  }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-50 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0">
-        {/* Warning triangles */}
-        <div className="absolute top-20 left-16 w-0 h-0 border-l-8 border-r-8 border-b-12 border-l-transparent border-r-transparent border-b-red-200 opacity-30 animate-bounce" />
-        <div className="absolute top-60 right-20 w-0 h-0 border-l-6 border-r-6 border-b-10 border-l-transparent border-r-transparent border-b-orange-200 opacity-40 animate-pulse" />
-        <div className="absolute bottom-32 left-32 w-0 h-0 border-l-10 border-r-10 border-b-14 border-l-transparent border-r-transparent border-b-red-300 opacity-20 animate-bounce" />
+    <div className="min-h-screen w-full bg-gradient-to-br from-rose-50 via-orange-50 to-red-50 text-gray-800 font-sans relative overflow-hidden">
+      {/* Animated Background Shapes */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className={`absolute top-[-10%] left-[-5%] w-96 h-96 bg-gradient-to-br opacity-40 rounded-full blur-3xl animate-float ${currentError.blobFrom}`}></div>
+        <div className={`absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-gradient-to-br opacity-30 rounded-full blur-3xl animate-float ${currentError.blobTo}`} style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-[-15%] left-[10%] w-[600px] h-[600px] bg-gradient-to-br from-orange-300/25 to-red-400/25 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }}></div>
       </div>
 
-      {/* Floating shapes */}
-      <div className="absolute top-32 right-32 w-16 h-16 bg-red-200 rounded-full opacity-20 animate-ping" />
-      <div className="absolute bottom-48 right-16 w-12 h-12 bg-orange-200 rounded-full opacity-30 animate-pulse" />
-      <div className="absolute top-2/3 left-16 w-20 h-20 bg-red-100 rounded-full opacity-25 animate-bounce" />
+      {/* Header */}
+      <header className={`relative z-10 p-8 transition-all duration-700 ${render ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5'}`}>
+        <div className="flex items-center space-x-4">
+          <div className={`w-14 h-14 bg-gradient-to-br rounded-2xl flex items-center justify-center shadow-xl ${currentError.accentBg} ${currentError.accentShadow}`}>
+            <span className="text-2xl font-black text-white">!</span>
+          </div>
+          <div>
+            <h1 className={`text-2xl font-bold bg-gradient-to-r bg-clip-text text-transparent ${currentError.accentText === 'text-rose-500' ? 'from-rose-600 to-red-600' : currentError.accentText === 'text-amber-500' ? 'from-amber-600 to-orange-600' : currentError.accentText === 'text-emerald-600' ? 'from-emerald-600 to-teal-600' : 'from-orange-600 to-red-600'}`}>MyShop2025</h1>
+            <p className="text-sm text-gray-600">Email Verification Issue</p>
+          </div>
+        </div>
+      </header>
 
       {/* Main Content */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
+      <main className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-180px)] p-6">
         <div 
-          className={`bg-white rounded-3xl shadow-2xl p-8 md:p-12 max-w-lg w-full text-center transform transition-all duration-1000 ${
-            isVisible ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-10'
-          } ${shake ? 'animate-pulse' : ''}`}
+          className={`bg-white/80 backdrop-blur-2xl border-2 border-white/60 rounded-[2.5rem] shadow-[0_20px_70px_rgba(239,68,68,0.2)] w-full max-w-5xl transition-all duration-1000 delay-200 ${render ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}
         >
-          {/* Error Icon */}
-          <div className={`mb-8 transform transition-all duration-1000 delay-300 ${
-            showContent ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
-          }`}>
-            <div className="w-20 h-20 mx-auto bg-gradient-to-r from-red-400 to-orange-500 rounded-full flex items-center justify-center animate-pulse">
-              <svg 
-                className="w-10 h-10 text-white" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={3} 
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z"
-                />
-              </svg>
+          <div className="p-12 md:p-20 text-center">
+            {/* Icon with Glow */}
+            <div className="flex justify-center mb-12">
+              <div className="relative">
+                <div className={`absolute inset-0 bg-gradient-to-br rounded-full blur-2xl opacity-40 animate-pulse ${currentError.accentBg}`}></div>
+                <div className={`relative bg-gradient-to-br rounded-full p-8 shadow-2xl ${currentError.accentBg} ${currentError.accentShadow}`}>
+                  <currentError.Icon 
+                    className={`w-32 h-32 text-white transition-transform duration-1000 delay-500 ${render ? 'scale-100 rotate-0' : 'scale-0 rotate-180'}`} 
+                    strokeWidth={2.5} 
+                  />
+                </div>
+                <div className={`absolute -inset-4 rounded-full -z-10 animate-ping-slow opacity-30 ${currentError.accentBg}`}></div>
+              </div>
             </div>
-          </div>
 
-          {/* Title */}
-          <h1 className={`text-3xl md:text-4xl font-bold text-gray-800 mb-6 transform transition-all duration-1000 delay-500 ${
-            showContent ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'
-          }`}>
-            <span className="bg-gradient-to-r from-red-600 to-orange-600 bg-clip-text text-transparent">
-              Có Lỗi Xảy Ra!
-            </span>
-          </h1>
+            {/* Title with Gradient */}
+            <h1 className={`text-5xl md:text-7xl font-black mb-6 text-center transition-all duration-700 delay-500 leading-tight ${render ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'} bg-gradient-to-r bg-clip-text text-transparent ${currentError.accentText === 'text-rose-500' ? 'from-rose-600 to-red-600' : currentError.accentText === 'text-amber-500' ? 'from-amber-600 to-orange-600' : currentError.accentText === 'text-emerald-600' ? 'from-emerald-600 to-teal-600' : 'from-orange-600 to-red-600'}`}>
+              {currentError.title}
+            </h1>
 
-          {/* Message */}
-          <div className={`space-y-4 mb-8 transform transition-all duration-1000 delay-700 ${
-            showContent ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'
-          }`}>
-            <p className="text-gray-600 text-lg leading-relaxed">
-              ⚠️ Link xác thực không hợp lệ hoặc đã hết hạn.
-            </p>
-            <p className="text-gray-600 text-base">
-              Vui lòng thực hiện lại quá trình xác thực email để tiếp tục.
-            </p>
-          </div>
-
-          {/* Error Details */}
-          <div className={`bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-r-lg transform transition-all duration-1000 delay-800 ${
-            showContent ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'
-          }`}>
-            <div className="flex items-center">
-              <svg className="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-              </svg>
-              <p className="text-red-700 text-sm font-medium">
-                Mã lỗi: VERIFICATION_EXPIRED
+            {/* Subtitle */}
+            <div className="flex justify-center w-full">
+              <p className={`text-xl md:text-2xl text-gray-700 font-medium mb-12 max-w-4xl text-center leading-relaxed transition-all duration-700 delay-700 ${render ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+                {currentError.description}
               </p>
             </div>
+
+            {/* Action Buttons - Bigger */}
+            <div className={`flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 transition-all duration-700 delay-1000 ${render ? 'opacity-100' : 'opacity-0'}`}>
+              <button 
+                className={`w-full sm:w-auto text-white text-lg font-bold py-5 px-12 rounded-2xl transform hover:scale-105 transition-all duration-300 group shadow-2xl ${currentError.accentBg} ${currentError.accentShadow} ${currentError.accentBgHover}`}
+                onClick={() => window.location.href = '/resend-verification'}
+              >
+                <div className="flex items-center justify-center space-x-3">
+                  <RefreshCw className="w-5 h-5 transform group-hover:rotate-180 transition-transform" strokeWidth={2.5} />
+                  <span>Gửi Lại Liên Kết</span>
+                </div>
+              </button>
+              <button 
+                className="w-full sm:w-auto bg-gradient-to-r from-gray-200 to-gray-300 text-gray-800 text-lg font-bold py-5 px-12 rounded-2xl hover:from-gray-300 hover:to-gray-400 transform hover:scale-105 transition-all duration-300 group shadow-xl"
+                onClick={() => window.location.href = '/support'}
+              >
+                <div className="flex items-center justify-center space-x-3">
+                  <HelpCircle className="w-5 h-5" strokeWidth={2.5} />
+                  <span>Liên Hệ Hỗ Trợ</span>
+                </div>
+              </button>
+            </div>
           </div>
 
-          {/* Action Buttons */}
-          <div className={`space-y-4 transform transition-all duration-1000 delay-900 ${
-            showContent ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'
-          }`}>
-            <button className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-              Gửi Lại Email Xác Thực
-            </button>
-            
-            <button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105">
-              Liên Hệ Hỗ Trợ
-            </button>
-
-            <Link 
-              to="/" 
-              className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105"
-            >
-              Về trang chủ
-            </Link>
+          {/* Info Cards Section */}
+          <div className={`bg-gradient-to-br from-gray-50/80 to-gray-100/80 border-t-2 border-white/60 rounded-b-[2.5rem] px-12 py-10`}>
+            <div className={`transition-all duration-700 delay-[1100ms] ${render ? 'opacity-100' : 'opacity-0'}`}>
+              <h3 className="font-bold text-2xl text-gray-800 text-center mb-8">Các Nguyên Nhân Có Thể Xảy Ra</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                {currentError.reasons.map((reason, index) => (
+                  <div key={index} className="flex flex-col items-center text-center space-y-3 p-6 bg-white/60 rounded-2xl shadow-lg hover:scale-105 transition-transform">
+                    <AlertTriangle className={`w-8 h-8 flex-shrink-0 ${currentError.accentText}`} strokeWidth={2} />
+                    <span className="text-gray-700 font-medium leading-relaxed">{reason}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-
-          {/* Decorative Elements */}
-          <div className="absolute -top-4 -right-4 w-8 h-8 bg-red-400 rounded-full opacity-60 animate-ping" />
-          <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-orange-400 rounded-full opacity-50 animate-bounce" />
         </div>
-      </div>
+      </main>
 
-      {/* Bottom Wave Animation */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg 
-          viewBox="0 0 1200 120" 
-          preserveAspectRatio="none" 
-          className="relative block w-full h-16"
-        >
-          <path 
-            d="M0,96L48,85.3C96,75,192,53,288,48C384,43,480,53,576,69.3C672,85,768,107,864,112C960,117,1056,107,1152,90.7C1248,75,1344,53,1392,42.7L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" 
-            fill="rgba(239, 68, 68, 0.1)"
-            className="animate-pulse"
-          />
-        </svg>
-      </div>
+      {/* Footer */}
+      <footer className={`relative z-10 text-center p-6 text-gray-600 text-sm transition-opacity duration-700 delay-[1300ms] ${render ? 'opacity-100' : 'opacity-0'}`}>
+        <p>&copy; 2025 MyShop2025. All rights reserved. Made with 💚 in Vietnam</p>
+      </footer>
     </div>
-  );
-};
+  )
+}
 
-export default ErrorPage;
+export default ErrorPage
+

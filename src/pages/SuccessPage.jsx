@@ -1,135 +1,120 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react'
+import { CheckCircle, ArrowRight, Gift, ShoppingBag } from 'lucide-react'
 
 const SuccessPage = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const [showContent, setShowContent] = useState(false);
-  const [particles, setParticles] = useState([]);
-
+  const [render, setRender] = useState(false)
   useEffect(() => {
-    // Tạo hiệu ứng xuất hiện
-    setTimeout(() => setIsVisible(true), 100);
-    setTimeout(() => setShowContent(true), 500);
-    
-    // Tạo particles cho hiệu ứng
-    const newParticles = Array.from({ length: 20 }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      delay: Math.random() * 2,
-      duration: 2 + Math.random() * 2,
-    }));
-    setParticles(newParticles);
-  }, []);
+    setRender(true)
+  }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 relative overflow-hidden">
-      {/* Animated Background Particles */}
-      <div className="absolute inset-0">
-        {particles.map((particle) => (
-          <div
-            key={particle.id}
-            className="absolute w-2 h-2 bg-blue-400 rounded-full opacity-20 animate-bounce"
-            style={{
-              left: `${particle.left}%`,
-              animationDelay: `${particle.delay}s`,
-              animationDuration: `${particle.duration}s`,
-            }}
-          />
-        ))}
+    <div className="min-h-screen w-full bg-gradient-to-br from-emerald-50 via-cyan-50 to-blue-50 text-gray-800 font-sans relative overflow-hidden">
+      {/* Animated Background Shapes */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-5%] w-96 h-96 bg-gradient-to-br from-emerald-400/40 to-cyan-400/40 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute top-[20%] right-[-10%] w-[500px] h-[500px] bg-gradient-to-br from-cyan-300/30 to-blue-400/30 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-[-15%] left-[10%] w-[600px] h-[600px] bg-gradient-to-br from-teal-300/25 to-emerald-400/25 rounded-full blur-3xl animate-float" style={{ animationDelay: '4s' }}></div>
       </div>
 
-      {/* Floating Shapes */}
-      <div className="absolute top-20 left-10 w-20 h-20 bg-blue-200 rounded-full opacity-30 animate-pulse" />
-      <div className="absolute top-40 right-20 w-16 h-16 bg-blue-300 rounded-full opacity-40 animate-bounce" />
-      <div className="absolute bottom-20 left-20 w-24 h-24 bg-blue-100 rounded-full opacity-50 animate-ping" />
-      <div className="absolute bottom-40 right-10 w-12 h-12 bg-blue-400 rounded-full opacity-30 animate-pulse" />
+      {/* Header */}
+      <header className={`relative z-10 p-8 transition-all duration-700 ${render ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5'}`}>
+        <div className="flex items-center space-x-4">
+          <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-500/30">
+            <span className="text-2xl font-black text-white">M</span>
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-cyan-600 bg-clip-text text-transparent">MyShop2025</h1>
+            <p className="text-sm text-gray-600">Email Verification Success</p>
+          </div>
+        </div>
+      </header>
 
       {/* Main Content */}
-      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
+      <main className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-180px)] p-6">
         <div 
-          className={`bg-white rounded-3xl shadow-2xl p-8 md:p-12 max-w-lg w-full text-center transform transition-all duration-1000 ${
-            isVisible ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-10'
-          }`}
+          className={`bg-white/80 backdrop-blur-2xl border-2 border-white/60 rounded-[2.5rem] shadow-[0_20px_70px_rgba(16,185,129,0.2)] w-full max-w-5xl transition-all duration-1000 delay-200 ${render ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}
         >
-          {/* Success Icon */}
-          <div className={`mb-8 transform transition-all duration-1000 delay-300 ${
-            showContent ? 'scale-100 opacity-100' : 'scale-0 opacity-0'
-          }`}>
-            <div className="w-20 h-20 mx-auto bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center animate-bounce">
-              <svg 
-                className="w-10 h-10 text-white" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-              >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth={3} 
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
+          <div className="p-12 md:p-20 text-center">
+            {/* Icon with Glow */}
+            <div className="flex justify-center mb-12">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full blur-2xl opacity-40 animate-pulse"></div>
+                <div className="relative bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-500 rounded-full p-8 shadow-2xl shadow-emerald-500/50">
+                  <CheckCircle 
+                    className={`w-32 h-32 text-white transition-transform duration-1000 delay-500 ${render ? 'scale-100 rotate-0' : 'scale-0 rotate-180'}`} 
+                    strokeWidth={2.5} 
+                  />
+                </div>
+                <div className="absolute -inset-4 bg-gradient-to-r from-emerald-400/20 to-cyan-400/20 rounded-full -z-10 animate-ping-slow"></div>
+              </div>
+            </div>
+
+            {/* Title with Gradient */}
+            <h1 className={`text-6xl md:text-7xl font-black bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent mb-6 transition-all duration-700 delay-500 leading-tight ${render ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+              Xác Thực Thành Công! 🎉
+            </h1>
+
+            {/* Subtitle */}
+            <p className={`text-2xl md:text-3xl text-gray-700 font-medium mb-4 text-center transition-all duration-700 delay-700 ${render ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+              Chào mừng bạn đến với MyShop2025
+            </p>
+            
+            <div className="flex justify-center w-full">
+              <p className={`text-lg md:text-xl text-gray-600 mb-12 max-w-3xl text-center leading-relaxed transition-all duration-700 delay-800 ${render ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+                Tài khoản của bạn đã được kích hoạt và sẵn sàng để khám phá hàng ngàn sản phẩm tuyệt vời
+              </p>
+            </div>
+
+            {/* Action Button - Bigger and More Colorful */}
+            <button 
+              className={`bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white text-xl font-bold py-6 px-16 rounded-2xl shadow-2xl shadow-emerald-500/40 hover:shadow-emerald-500/60 hover:scale-105 transform transition-all duration-300 delay-1000 group ${render ? 'opacity-100' : 'opacity-0'}`}
+              onClick={() => window.location.href = '/login'}
+            >
+              <div className="flex items-center justify-center space-x-3">
+                <span>Bắt Đầu Mua Sắm Ngay</span>
+                <ArrowRight className="w-6 h-6 transform group-hover:translate-x-2 transition-transform" strokeWidth={3} />
+              </div>
+            </button>
+          </div>
+
+          {/* Feature Cards Section */}
+          <div className="bg-gradient-to-br from-emerald-50/80 to-cyan-50/80 border-t-2 border-white/60 rounded-b-[2.5rem] px-12 py-10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className={`flex flex-col items-center text-center space-y-3 p-6 bg-white/60 rounded-2xl shadow-lg transition-all duration-700 delay-[1100ms] hover:scale-105 ${render ? 'opacity-100' : 'opacity-0'}`}>
+                <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Gift className="w-9 h-9 text-white" strokeWidth={2} />
+                </div>
+                <h3 className="font-bold text-xl text-gray-800">Ưu Đãi Chào Mừng</h3>
+                <p className="text-gray-600">Giảm 20% cho đơn hàng đầu tiên của bạn</p>
+              </div>
+              
+              <div className={`flex flex-col items-center text-center space-y-3 p-6 bg-white/60 rounded-2xl shadow-lg transition-all duration-700 delay-[1200ms] hover:scale-105 ${render ? 'opacity-100' : 'opacity-0'}`}>
+                <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <ShoppingBag className="w-9 h-9 text-white" strokeWidth={2} />
+                </div>
+                <h3 className="font-bold text-xl text-gray-800">Hàng Ngàn Sản Phẩm</h3>
+                <p className="text-gray-600">Khám phá bộ sưu tập đa dạng của chúng tôi</p>
+              </div>
+              
+              <div className={`flex flex-col items-center text-center space-y-3 p-6 bg-white/60 rounded-2xl shadow-lg transition-all duration-700 delay-[1300ms] hover:scale-105 ${render ? 'opacity-100' : 'opacity-0'}`}>
+                <div className="w-16 h-16 bg-gradient-to-br from-teal-400 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <CheckCircle className="w-9 h-9 text-white" strokeWidth={2} />
+                </div>
+                <h3 className="font-bold text-xl text-gray-800">Miễn Phí Vận Chuyển</h3>
+                <p className="text-gray-600">Cho tất cả đơn hàng trên 500.000đ</p>
+              </div>
             </div>
           </div>
-
-          {/* Title */}
-          <h1 className={`text-3xl md:text-4xl font-bold text-gray-800 mb-6 transform transition-all duration-1000 delay-500 ${
-            showContent ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'
-          }`}>
-            <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
-              Xác Thực Thành Công!
-            </span>
-          </h1>
-
-          {/* Message */}
-          <div className={`space-y-4 mb-8 transform transition-all duration-1000 delay-700 ${
-            showContent ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'
-          }`}>
-            <p className="text-gray-600 text-lg leading-relaxed">
-              🎉 Chúc mừng! Tài khoản của bạn đã được xác thực thành công.
-            </p>
-            <p className="text-gray-600 text-base">
-              Vui lòng đăng nhập trên ứng dụng để tiếp tục sử dụng dịch vụ.
-            </p>
-          </div>
-
-          {/* Action Buttons */}
-          <div className={`space-y-4 transform transition-all duration-1000 delay-900 ${
-            showContent ? 'translate-y-0 opacity-100' : 'translate-y-5 opacity-0'
-          }`}>
-            <button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg">
-              Mở Ứng Dụng
-            </button>
-            
-            <Link 
-              to="/error" 
-              className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105"
-            >
-              Xem trang lỗi (Demo)
-            </Link>
-          </div>
-
-          {/* Decorative Elements */}
-          <div className="absolute -top-4 -right-4 w-8 h-8 bg-blue-400 rounded-full opacity-60 animate-pulse" />
-          <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-green-400 rounded-full opacity-50 animate-bounce" />
         </div>
-      </div>
+      </main>
 
-      {/* Floating Animation */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg 
-          viewBox="0 0 1200 120" 
-          preserveAspectRatio="none" 
-          className="relative block w-full h-16 animate-pulse"
-        >
-          <path 
-            d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,128C960,117,1056,75,1152,69.3C1248,64,1344,96,1392,112L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" 
-            fill="rgba(59, 130, 246, 0.1)"
-          />
-        </svg>
-      </div>
+      {/* Footer */}
+      <footer className={`relative z-10 text-center p-6 text-gray-600 text-sm transition-opacity duration-700 delay-[1400ms] ${render ? 'opacity-100' : 'opacity-0'}`}>
+        <p>&copy; 2025 MyShop2025. All rights reserved. Made with 💚 in Vietnam</p>
+      </footer>
     </div>
-  );
-};
+  )
+}
 
-export default SuccessPage;
+export default SuccessPage
+

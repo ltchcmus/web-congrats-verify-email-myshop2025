@@ -8,9 +8,9 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<SuccessPage />} />
         <Route path="/success" element={<SuccessPage />} />
         <Route path="/error" element={<ErrorPage />} />
+        <Route path="/verify-email" element={<SuccessPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>

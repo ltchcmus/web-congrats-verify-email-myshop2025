@@ -1,62 +1,53 @@
-import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react'
 
 const NotFoundPage = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [showContent, setShowContent] = useState(false)
 
   useEffect(() => {
-    setTimeout(() => setIsVisible(true), 100);
-  }, []);
+    setTimeout(() => setShowContent(true), 100)
+  }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 relative overflow-hidden">
-      {/* Floating Elements */}
-      <div className="absolute top-20 left-20 w-16 h-16 bg-gray-200 rounded-full opacity-50 animate-pulse" />
-      <div className="absolute top-40 right-32 w-12 h-12 bg-gray-300 rounded-full opacity-30 animate-bounce" />
-      <div className="absolute bottom-32 left-32 w-20 h-20 bg-gray-100 rounded-full opacity-40 animate-ping" />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 p-4 overflow-hidden relative">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute w-96 h-96 bg-white/10 rounded-full blur-3xl -top-48 -left-48 animate-float"></div>
+        <div className="absolute w-96 h-96 bg-white/10 rounded-full blur-3xl -bottom-48 -right-48 animate-float" style={{ animationDelay: '1s' }}></div>
+      </div>
 
-      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-        <div 
-          className={`bg-white rounded-3xl shadow-xl p-8 md:p-12 max-w-lg w-full text-center transform transition-all duration-1000 ${
-            isVisible ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-10'
-          }`}
-        >
-          {/* 404 Number */}
-          <div className="mb-8">
-            <h1 className="text-6xl md:text-8xl font-bold text-gray-300 animate-pulse">
-              404
-            </h1>
+      {/* Main content card */}
+      <div 
+        className={`relative z-10 bg-white rounded-3xl shadow-2xl p-8 md:p-12 max-w-md w-full text-center transform transition-all duration-700 ${
+          showContent ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-95 translate-y-10'
+        }`}
+      >
+        {/* 404 illustration */}
+        <div className="mb-8">
+          <div className="text-8xl font-bold text-transparent bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text animate-[fadeInScale_0.5s_ease-out_0.3s_both]">
+            404
           </div>
+        </div>
 
-          {/* Message */}
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
-            Trang Không Tìm Thấy
-          </h2>
-          
-          <p className="text-gray-600 mb-8 leading-relaxed">
-            Xin lỗi, trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.
-          </p>
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4 animate-[slideInUp_0.6s_ease-out_0.4s_both]">
+          Không Tìm Thấy Trang
+        </h1>
+        
+        <p className="text-gray-600 text-lg mb-8 animate-[slideInUp_0.6s_ease-out_0.5s_both]">
+          Trang bạn đang tìm kiếm không tồn tại hoặc đã được di chuyển
+        </p>
 
-          {/* Navigation */}
-          <div className="space-y-4">
-            <Link 
-              to="/" 
-              className="block w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105"
-            >
-              Về Trang Chủ
-            </Link>
-            
-            <Link 
-              to="/error" 
-              className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-xl transition-all duration-300"
-            >
-              Xem Trang Lỗi
-            </Link>
-          </div>
+        {/* Action buttons */}
+        <div className="space-y-3 animate-[slideInUp_0.6s_ease-out_0.6s_both]">
+          <button 
+            onClick={() => window.location.href = '/'}
+            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold py-4 px-6 rounded-xl hover:from-purple-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
+            Về Trang Chủ
+          </button>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default NotFoundPage;
+export default NotFoundPage
